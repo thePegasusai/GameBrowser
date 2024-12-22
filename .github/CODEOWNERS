@@ -1,0 +1,24 @@
+* @global-owner1 @global-owner2
+
+# Frontend team owns web application code
+src/web/ @frontend-team
+
+# ML team owns model implementation code
+src/web/src/lib/model/ @ml-team
+
+# Graphics team owns WebGL acceleration code
+src/web/src/lib/webgl/ @graphics-team
+
+# DevOps team owns infrastructure and CI/CD code
+infrastructure/ @devops-team
+.github/workflows/ @devops-team
+
+# TypeScript reviewers for all TypeScript files
+*.ts @typescript-reviewers
+
+# Dependency reviewers for package management files
+package.json @dependency-reviewers
+package-lock.json @dependency-reviewers
+
+# The last matching pattern takes precedence.
+# Files that match multiple patterns will use the last matching pattern's owners.
