@@ -1,0 +1,53 @@
+# EditorConfig configuration for browser-based video game diffusion model
+# https://editorconfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Default settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 100
+
+# JavaScript/TypeScript files including ML model implementation
+[*.{js,jsx,ts,tsx}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+
+# Web Worker TypeScript files for ML processing
+[*.worker.ts]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+
+# Stylesheet files
+[*.{css,scss}]
+indent_style = space
+indent_size = 2
+
+# Configuration files
+[*.{json,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Markdown documentation
+[*.{md,markdown}]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# HTML templates
+[*.{html,htm}]
+indent_style = space
+indent_size = 2
+
+# WebGL shader files
+[*.glsl]
+indent_style = space
+indent_size = 2
+max_line_length = 80
