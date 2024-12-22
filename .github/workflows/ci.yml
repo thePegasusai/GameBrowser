@@ -1,0 +1,143 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - main
+      - develop
+    paths:
+      - 'src/web/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'src/web/**'
+
+env:
+  NODE_VERSION: '16.x'
+  CACHE_KEY: "npm-deps-${{ hashFiles('**/package-lock.json') }}"
+  WEBGL_REQUIRED: true
+  MEMORY_LIMIT: '4gb'
+  PERFORMANCE_THRESHOLD: 50
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox, safari]
+        include:
+          - browser: chrome
+            webgl: true
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ env.CACHE_KEY }}
+          restore-keys: |
+            npm-deps-
+
+      - name: Setup browser testing environment
+        uses: microsoft/playwright-github-action@v1
+        with:
+          browsers: ${{ matrix.browser }}
+
+      - name: Setup Chrome for WebGL testing
+        if: matrix.webgl
+        uses: browser-tools/setup-chrome@latest
+        with:
+          chrome-version: stable
+
+      - name: Install dependencies
+        run: |
+          cd src/web
+          npm ci
+          
+      - name: Type checking
+        run: |
+          cd src/web
+          npm run type-check
+
+      - name: Lint code
+        run: |
+          cd src/web
+          npm run lint
+        
+      - name: Run unit tests
+        run: |
+          cd src/web
+          npm run test:unit -- --coverage
+        env:
+          NODE_OPTIONS: --max-old-space-size=${{ env.MEMORY_LIMIT }}
+
+      - name: Run browser compatibility tests
+        run: |
+          cd src/web
+          npm run test:browser -- --browser ${{ matrix.browser }}
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+
+      - name: Validate WebGL capabilities
+        if: matrix.webgl
+        run: |
+          cd src/web
+          npm run test:webgl
+        env:
+          WEBGL_REQUIRED: ${{ env.WEBGL_REQUIRED }}
+
+      - name: Run ML model validation
+        if: matrix.browser == 'chrome'
+        run: |
+          cd src/web
+          npm run test:ml
+        env:
+          NODE_OPTIONS: --max-old-space-size=${{ env.MEMORY_LIMIT }}
+
+      - name: Build application
+        run: |
+          cd src/web
+          npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=${{ env.MEMORY_LIMIT }}
+
+      - name: Performance benchmarking
+        if: matrix.browser == 'chrome'
+        run: |
+          cd src/web
+          npm run benchmark
+        env:
+          PERFORMANCE_THRESHOLD: ${{ env.PERFORMANCE_THRESHOLD }}
+
+      - name: Upload test coverage
+        if: matrix.browser == 'chrome'
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: src/web/coverage
+
+      - name: Upload benchmark results
+        if: matrix.browser == 'chrome'
+        uses: actions/upload-artifact@v2
+        with:
+          name: benchmark-results
+          path: src/web/benchmark-results
+
+      - name: Report job status
+        if: always()
+        run: |
+          echo "Browser: ${{ matrix.browser }}"
+          echo "WebGL: ${{ matrix.webgl }}"
+          echo "Status: ${{ job.status }}"
