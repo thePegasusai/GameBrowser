@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character Encoding -->
+    <meta charset="utf-8">
+
+    <!-- Viewport and Display Settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Application Description -->
+    <meta name="description" content="Browser-based video game footage generation using diffusion models">
+    
+    <!-- ML-Specific Capabilities -->
+    <meta name="webgl" content="prefer-hardware">
+    <meta name="ml-capabilities" content="webgl2,wasm,simd">
+    
+    <!-- Progressive Web App Settings -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' 'unsafe-eval' https://cdn.jsdelivr.net; 
+                   worker-src 'self' blob:; 
+                   style-src 'self' 'unsafe-inline'; 
+                   img-src 'self' blob: data:; 
+                   connect-src 'self' https://cdn.jsdelivr.net; 
+                   child-src 'none';">
+
+    <!-- Application Title -->
+    <title>Browser Video Game Diffusion Model</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="./public/favicon.ico">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="./public/manifest.json">
+    
+    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="./src/styles/global.css">
+</head>
+<body>
+    <!-- JavaScript Required Notice -->
+    <noscript>
+        <div style="padding: 20px; text-align: center; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+            You need to enable JavaScript and WebGL to run this ML application
+        </div>
+    </noscript>
+
+    <!-- Loading Indicator -->
+    <div id="loading" 
+         role="progressbar" 
+         aria-label="Loading Machine Learning Model"
+         style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div role="status" aria-live="polite">
+            Initializing ML Model...
+        </div>
+    </div>
+
+    <!-- React Root -->
+    <main id="root" 
+          role="application" 
+          aria-label="Machine Learning Application">
+    </main>
+
+    <!-- Error Boundary -->
+    <div id="error-boundary" 
+         role="alert" 
+         aria-live="assertive" 
+         style="display: none;">
+    </div>
+
+    <!-- Core Dependencies -->
+    <!-- React 18.0.0 -->
+    <script defer 
+            src="https://cdn.jsdelivr.net/npm/react@18.0.0/umd/react.production.min.js" 
+            integrity="sha384-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk53Rd0pWFdPf4IdiS+ILh" 
+            crossorigin="anonymous">
+    </script>
+    
+    <!-- React DOM 18.0.0 -->
+    <script defer 
+            src="https://cdn.jsdelivr.net/npm/react-dom@18.0.0/umd/react-dom.production.min.js" 
+            integrity="sha384-87dnPZxR+yK075L9uL4HUh+yZ5YP5gTvG9fH0Jk53Rd0pWFdPf4IdiS+ILh4L5J+" 
+            crossorigin="anonymous">
+    </script>
+    
+    <!-- TensorFlow.js 4.0.0 -->
+    <script defer 
+            src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.0.0/dist/tf.min.js" 
+            integrity="sha384-6m+Qj6X6hzHf9GLmG9CzN/Jl2HzgK9NlQ6KH9t5FJn2GD5GgqUV9T7Rd3GAzV0+" 
+            crossorigin="anonymous">
+    </script>
+
+    <!-- Application Entry Point -->
+    <script defer src="./src/index.tsx"></script>
+
+    <!-- ML Initialization Detection -->
+    <script>
+        window.addEventListener('load', function() {
+            // Check WebGL2 support
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl2');
+            if (!gl) {
+                document.getElementById('error-boundary').style.display = 'block';
+                document.getElementById('error-boundary').innerHTML = 
+                    'WebGL2 is required for hardware-accelerated ML operations';
+            }
+            
+            // Hide loading indicator when React hydrates
+            const observer = new MutationObserver(function(mutations) {
+                if (document.getElementById('root').children.length > 0) {
+                    document.getElementById('loading').style.display = 'none';
+                    observer.disconnect();
+                }
+            });
+            
+            observer.observe(document.getElementById('root'), {
+                childList: true
+            });
+        });
+    </script>
+</body>
+</html>
