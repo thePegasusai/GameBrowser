@@ -1,0 +1,108 @@
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+.cache/
+.webpack/
+*.min.js
+*.min.css
+
+# ML Model
+*.ckpt
+*.h5
+*.tfjs
+model-weights/
+*.bin
+*.json.gz
+*.pb
+*.pbtxt
+*.tflite
+model-metadata.json
+
+# Browser-specific
+.shader-cache/
+indexeddb/
+*.webgl.json
+browser-training/
+.gpu-cache/
+webgl-profiler/
+*.wasm
+service-worker.js
+workbox-*.js
+
+# Environment
+.env*
+.env.local
+.env.development
+.env.production
+.ml-config.json
+config.local.js
+*.config.local.json
+ml-parameters.json
+
+# Testing
+coverage/
+browser-tests/
+performance-logs/
+test-results/
+cypress/videos/
+cypress/screenshots/
+.nyc_output/
+jest-coverage/
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
+temp/
+.temp/
+tmp/
+.tmp/
+*.bak
+
+# Debug files
+debug/
+*.debug.js
+chrome-profiler-events*.json
+*.heapsnapshot
+*.heaptimeline
+*.cpuprofile
+
+# Large media files
+*.mp4
+*.webm
+*.mov
+training-videos/
+sample-data/
+dataset/
+
+# Documentation artifacts
+docs/_site/
+docs/.jekyll-cache/
+.docusaurus/
+.cache-loader/
+
+# Deployment
+.vercel/
+.netlify/
+.firebase/
+.now/
+
+# Miscellaneous
+.git/
+*.pid
+*.seed
+*.pid.lock
+.eslintcache
+.stylelintcache
+.browserslistrc
