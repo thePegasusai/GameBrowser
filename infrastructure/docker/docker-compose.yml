@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: ../../src/web
+      dockerfile: dev.Dockerfile
+      args:
+        NODE_VERSION: "16"
+        WEBPACK_MODE: "development"
+    ports:
+      - "3000:3000"  # Development server
+      - "9229:9229"  # Node.js debugging
+    volumes:
+      - type: bind
+        source: ../../src/web
+        target: /app
+        consistency: delegated
+      - type: volume
+        source: node_modules
+        target: /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DEBUG=bvgdm:*
+      - WEBPACK_DEV_SERVER_PORT=3000
+      - CHOKIDAR_USEPOLLING=true
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2'
+        reservations:
+          memory: 2G
+          cpus: '1'
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+volumes:
+  node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      device: node_modules
+      o: bind
+
+networks:
+  app_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: bvgdm_net
+      com.docker.network.bridge.enable_icc: "true"
+
+x-environment: &common-variables
+  COMPOSE_PROJECT_NAME: bvgdm
+  COMPOSE_HTTP_TIMEOUT: "120"
+  DOCKER_CLIENT_TIMEOUT: "120"
