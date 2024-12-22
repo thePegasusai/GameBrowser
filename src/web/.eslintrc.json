@@ -1,0 +1,87 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true,
+    "jest": true,
+    "worker": true,
+    "webgl": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "no-console": ["warn", {
+      "allow": ["warn", "error"]
+    }],
+    "no-debugger": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "argsIgnorePattern": "^_"
+    }],
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-restricted-globals": ["error", "SharedArrayBuffer", "Atomics"],
+    "no-restricted-syntax": ["error", "DebuggerStatement"],
+    "no-eval": "error",
+    "no-implied-eval": "error"
+  },
+  "overrides": [
+    {
+      "files": ["*.worker.ts"],
+      "rules": {
+        "no-restricted-globals": "off",
+        "no-restricted-syntax": ["error", "BrowserStatement"]
+      }
+    },
+    {
+      "files": ["*.test.ts", "*.test.tsx"],
+      "env": {
+        "jest": true
+      }
+    },
+    {
+      "files": ["*.gl.ts", "*.webgl.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "no-loop-func": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "build/",
+    "dist/",
+    "node_modules/",
+    "coverage/",
+    "public/",
+    "*.min.js",
+    "*.worker.js"
+  ]
+}
