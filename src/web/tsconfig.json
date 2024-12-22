@@ -1,0 +1,89 @@
+{
+  "compilerOptions": {
+    // Target ES2020 for modern browser compatibility
+    "target": "ES2020",
+    
+    // Include necessary type definitions for browser and WebGL support
+    "lib": [
+      "DOM",
+      "DOM.Iterable", 
+      "ESNext",
+      "WebGL2"
+    ],
+    
+    // Module configuration
+    "module": "ESNext",
+    "moduleResolution": "node",
+    
+    // Base URL and path aliases for clean imports
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@components/*": ["components/*"],
+      "@lib/*": ["lib/*"],
+      "@hooks/*": ["hooks/*"],
+      "@workers/*": ["workers/*"],
+      "@config/*": ["config/*"],
+      "@constants/*": ["constants/*"],
+      "@types/*": ["types/*"],
+      "@styles/*": ["styles/*"],
+      "@models/*": ["models/*"],
+      "@utils/*": ["utils/*"],
+      "@shaders/*": ["shaders/*"],
+      "@tensors/*": ["tensors/*"]
+    },
+
+    // React configuration
+    "jsx": "react-jsx",
+
+    // Strict type checking
+    "strict": true,
+    
+    // Module interop and compatibility
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    
+    // Build optimization
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    
+    // Type definitions
+    "types": [
+      "node",
+      "jest",
+      "webgl2",
+      "tensorflow"
+    ],
+    
+    // Type roots
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ]
+  },
+  
+  // Include patterns for TypeScript files
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "src/**/*.glsl",
+    "src/**/*.worker.ts"
+  ],
+  
+  // Exclude patterns
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "coverage",
+    ".next",
+    "out"
+  ]
+}
