@@ -1,0 +1,25 @@
+# Robots.txt - Crawler Access Control Configuration
+
+User-agent: *
+# Allow access to main application interface and PWA manifest
+Allow: /
+Allow: /index.html
+Allow: /manifest.json
+
+# Protect source code and development resources
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /*.js$
+Disallow: /*.map$
+
+# Protect API endpoints and model assets
+Disallow: /api/
+Disallow: /assets/model/
+Disallow: /temp/
+
+# Restrict access to configuration and log files
+Disallow: /*.json$
+Disallow: /*.txt$
+Disallow: /*.log$
+
+# Ensure proper UTF-8 encoding for international crawlers
