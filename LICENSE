@@ -1,0 +1,49 @@
+MIT License
+
+Copyright (c) 2024 Browser-Based Video Game Diffusion Model (BVGDM)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), including
+its browser-based machine learning implementation, client-side processing
+components, and WebGL acceleration features, to deal in the Software without
+restriction, including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+Additional Terms for Browser-Based ML Implementation:
+
+1. User Data Rights: All user data processed by the client-side machine learning
+   components remains the sole property of the user. The Software does not claim
+   any rights to data processed within the user's browser environment.
+
+2. Generated Content: Content generated using the Software's diffusion model
+   capabilities may be used for any purpose, commercial or non-commercial, 
+   provided appropriate attribution is given to the Software.
+
+3. Model Training: Users may train and modify models within their browser
+   environment without restriction. Trained model weights and modifications
+   are owned by the users who create them.
+
+4. Browser Implementation: This license explicitly permits deployment and
+   execution of machine learning models in web browsers using WebGL
+   acceleration and client-side processing capabilities.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Note on Dependencies:
+This project incorporates TensorFlow.js, which is licensed under the Apache
+License 2.0. Users must comply with all dependency licenses when using,
+modifying, or distributing this Software.
+
+For questions about this license or to report compliance issues, please
+contact the project maintainers or open an issue in the project repository.
