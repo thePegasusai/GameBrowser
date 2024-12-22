@@ -1,0 +1,74 @@
+{
+  "short_name": "BVGDM",
+  "name": "Browser Video Game Diffusion Model",
+  "description": "Browser-based video game footage generation using diffusion models",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "scope": "/",
+  "categories": [
+    "machine learning",
+    "video games",
+    "ai"
+  ],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Main interface of BVGDM"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Generate Video",
+      "url": "/generate",
+      "description": "Start video generation"
+    },
+    {
+      "name": "Training",
+      "url": "/train",
+      "description": "Train diffusion model"
+    }
+  ],
+  "related_applications": [],
+  "dir": "ltr",
+  "lang": "en",
+  "iarc_rating_id": "",
+  "share_target": {
+    "action": "/share-target",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "files": [
+        {
+          "name": "video",
+          "accept": ["video/*"]
+        }
+      ]
+    }
+  }
+}
