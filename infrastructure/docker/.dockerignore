@@ -1,0 +1,117 @@
+node_modules
+npm-debug.log*
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Build outputs
+dist
+build
+*.bundle.js
+*.chunk.js
+
+# Development and IDE
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Testing and coverage
+tests
+coverage
+*.test.*
+__tests__
+jest.config.*
+cypress
+*.spec.*
+
+# Documentation
+*.md
+docs
+README*
+CHANGELOG*
+LICENSE*
+
+# Environment and secrets
+.env*
+*.env
+*credentials*
+*secret*
+*.key
+*.pem
+.npmrc
+
+# TensorFlow.js specific
+*.ckpt
+*.h5
+*.tfjs
+*.pb
+model_weights/
+temp_models/
+training_data/
+profiler_logs/
+webgl_cache/
+*checkpoint*
+saved_model/
+model.json
+*.bin
+
+# Infrastructure
+infrastructure
+docker-compose*
+Dockerfile*
+*.yml
+*.yaml
+
+# Logs and debugging
+*.log
+logs
+debug/
+chrome-profiler-events*.json
+
+# Temporary files
+tmp
+temp
+.tmp
+*.tmp
+
+# OS generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Media and large files
+*.mp4
+*.avi
+*.mov
+*.webm
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Package management
+package-lock.json
+yarn.lock
+.yarnrc
+.npmrc
+
+# Browser and WebGL
+.cache/
+.chrome/
+.firefox/
+
+# Development tools
+.eslintcache
+.stylelintcache
+.prettierrc
+.eslintrc*
+.babelrc*
+*.config.js
