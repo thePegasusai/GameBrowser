@@ -1,0 +1,40 @@
+Format: ICO (Windows Icon)
+Dimensions: 32x32 pixels
+Color Depth: 32-bit RGBA
+File Size: Optimized to <5KB
+Compression: Lossless PNG compression within ICO container
+
+Design Elements:
+- Stylized neural network node structure representing ML/AI
+- Pixelated elements suggesting video game aesthetics
+- High contrast edges for visibility at small sizes
+- Semi-transparent background for theme compatibility
+- Clean geometric shapes for recognizability
+
+Color Palette:
+- Primary: #007AFF (AI Blue)
+- Secondary: #FF3B30 (Gaming Red)
+- Accent: #5856D6 (Neural Purple)
+- Background: Transparent
+- Edges: #000000 (Black outline for contrast)
+
+Optimization:
+- Stripped metadata
+- Optimized PNG compression
+- Single 32x32 size variant
+- Reduced color palette while maintaining quality
+- Clean vector-based shapes scaled to pixels
+
+Cache-Control Headers:
+Cache-Control: public, max-age=31536000
+ETag: Enabled
+Last-Modified: [Creation Timestamp]
+
+Accessibility Features:
+- 7:1 minimum contrast ratio
+- Distinct silhouette
+- Colorblind-friendly palette
+- Sharp edges for high-DPI displays
+
+The binary file should be created using professional image editing software 
+following these exact specifications to ensure optimal quality and performance.
