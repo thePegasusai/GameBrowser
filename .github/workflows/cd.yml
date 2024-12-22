@@ -1,0 +1,172 @@
+name: CD
+
+# Trigger deployment on main/develop branch pushes or manual dispatch
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'src/web/**'
+      - 'infrastructure/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+# Environment variables
+env:
+  NODE_VERSION: '16.x'
+  TF_VERSION: '1.0.0'
+  DEPLOYMENT_TIMEOUT: '30m'
+  TF_VAR_project_name: 'bvgdm'
+  TF_VAR_enable_cdn: 'true'
+  TF_VAR_s3_versioning: 'true'
+
+# Jobs configuration
+jobs:
+  # Reference validation job from CI workflow
+  validate:
+    uses: ./.github/workflows/ci.yml
+
+  # Main deployment job
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    # Environment configuration with URL output
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+      url: ${{ steps.deploy.outputs.environment_url }}
+    
+    # Concurrency control to prevent parallel deployments
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      # Checkout code with full history for versioning
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Setup Node.js with caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: 'src/web/package-lock.json'
+
+      # Configure AWS credentials using OIDC
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-duration-seconds: 3600
+          role-session-name: GitHubActions
+
+      # Setup Terraform with version pinning
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+
+      # Set deployment version
+      - name: Set Deployment Version
+        id: version
+        run: |
+          echo "DEPLOY_VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "DEPLOY_TIMESTAMP=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_ENV
+
+      # Initialize Terraform
+      - name: Initialize Terraform
+        working-directory: infrastructure/terraform
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ env.TF_VAR_project_name }}-${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'staging') }}-tfstate" \
+            -backend-config="region=${{ secrets.AWS_REGION }}"
+
+      # Deploy infrastructure
+      - name: Deploy Infrastructure
+        id: deploy_infra
+        working-directory: infrastructure/terraform
+        run: |
+          bash ../../infrastructure/scripts/deploy.sh deploy_infrastructure \
+            "${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'staging') }}" \
+            "${{ env.DEPLOY_VERSION }}"
+
+      # Build application
+      - name: Build Application
+        working-directory: src/web
+        env:
+          NODE_ENV: production
+          DEPLOY_ENV: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'staging') }}
+        run: |
+          npm ci
+          npm run build
+
+      # Security scan of built artifacts
+      - name: Security Scan
+        run: |
+          npm audit
+          npm run security-scan
+
+      # Deploy static content
+      - name: Deploy Static Content
+        id: deploy_static
+        run: |
+          bash infrastructure/scripts/deploy.sh deploy_static_content \
+            "${{ steps.deploy_infra.outputs.bucket_name }}" \
+            "${{ steps.deploy_infra.outputs.distribution_id }}" \
+            "${{ env.DEPLOY_VERSION }}"
+
+      # Validate deployment
+      - name: Validate Deployment
+        id: validate
+        run: |
+          bash infrastructure/scripts/deploy.sh validate_deployment \
+            "${{ steps.deploy_infra.outputs.distribution_domain }}" \
+            "${{ env.DEPLOY_VERSION }}"
+
+      # Create CloudFront invalidation
+      - name: Invalidate CloudFront Cache
+        if: success()
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ steps.deploy_infra.outputs.distribution_id }} \
+            --paths "/*"
+
+      # Send deployment notification
+      - name: Send Deployment Notification
+        if: always()
+        run: |
+          curl -X POST ${{ secrets.DEPLOYMENT_NOTIFICATION_URL }} \
+            -H "Content-Type: application/json" \
+            -d '{
+              "environment": "${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'staging') }}",
+              "version": "${{ env.DEPLOY_VERSION }}",
+              "status": "${{ job.status }}",
+              "url": "${{ steps.deploy_infra.outputs.distribution_domain }}"
+            }'
+
+      # Update deployment tracking
+      - name: Update Deployment Tracking
+        if: success()
+        run: |
+          echo "${{ env.DEPLOY_VERSION }} ${{ env.DEPLOY_TIMESTAMP }}" >> deployments.log
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add deployments.log
+          git commit -m "Update deployment tracking [skip ci]"
+          git push
