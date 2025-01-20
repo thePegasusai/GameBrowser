@@ -54,7 +54,7 @@ jobs:
     steps:
       # Checkout code with full history for versioning
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
