@@ -123,14 +123,14 @@ jobs:
 
       - name: Upload test coverage
         if: matrix.browser == 'chrome'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: src/web/coverage
 
       - name: Upload benchmark results
         if: matrix.browser == 'chrome'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: benchmark-results
           path: src/web/benchmark-results
